@@ -1,21 +1,35 @@
 package com.ndnt.quizapp;
 
+import com.ndnt.themes.DarkThemeFactory;
+import com.ndnt.themes.Theme;
+import com.ndnt.themes.ThemeManager;
 import com.ndnt.utils.MyAlert;
+import com.ndnt.utils.MyStage;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 
-public class PrimaryController {
+public class PrimaryController implements Initializable {
+
+    @FXML
+    private ComboBox<Theme> cbThemes;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        this.cbThemes.setItems(FXCollections.observableArrayList(Theme.values()));
+    }
+
+    public void handleChangeThemes(ActionEvent action) {
+        this.cbThemes.getSelectionModel().getSelectedItem().updateTheme(this.cbThemes.getScene());
+    }
 
     public void handleQuestionManager(ActionEvent event) throws IOException {
-        Scene scene = new Scene(new FXMLLoader(App.class.getResource("question.fxml")).load());
-
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Quiz App");
-        stage.show();
+        MyStage.getInstance().showStage("question.fxml");
     }
 
     public void handlePratice(ActionEvent event) {
@@ -33,4 +47,5 @@ public class PrimaryController {
     public void handleSignIn(ActionEvent event) {
         MyAlert.getInstance().showMsg("Coming soon...");
     }
+
 }
