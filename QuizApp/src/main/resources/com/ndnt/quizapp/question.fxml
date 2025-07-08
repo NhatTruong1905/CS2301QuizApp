@@ -5,14 +5,15 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="Main" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ndnt.quizapp.QuestionController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="605.0" styleClass="Main" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ndnt.quizapp.QuestionController">
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="QUẢN LÝ CÂU HỎI" />
-      <TextArea prefHeight="60.0" prefWidth="600.0" promptText="Nội dung câu hỏi" />
+      <TextArea fx:id="txtContent" prefHeight="60.0" prefWidth="600.0" promptText="Nội dung câu hỏi" />
       <HBox prefHeight="100.0" prefWidth="200.0" styleClass="Main">
          <children>
             <ComboBox fx:id="cbCates" prefWidth="150.0" promptText="Danh mục" />
@@ -23,18 +24,22 @@
          <children>
             <HBox prefHeight="29.0" prefWidth="600.0" styleClass="Main">
                <children>
-                  <RadioButton mnemonicParsing="false" />
+                  <RadioButton mnemonicParsing="false">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="toggleChoice" />
+                     </toggleGroup></RadioButton>
                   <TextField prefHeight="47.0" prefWidth="149.0" />
                </children>
             </HBox>
             <HBox layoutX="10.0" layoutY="10.0" prefHeight="57.0" prefWidth="600.0" styleClass="Main">
                <children>
-                  <RadioButton mnemonicParsing="false" />
+                  <RadioButton mnemonicParsing="false" toggleGroup="$toggleChoice" />
                   <TextField />
                </children>
             </HBox>
          </children>
       </VBox>
       <Button mnemonicParsing="false" onAction="#addChoice" styleClass="Button" stylesheets="@style.css" text="Thêm lựa chọn" />
+      <Button mnemonicParsing="false" onAction="#addQuestion" style="-fx-background-color: Darkblue;" styleClass="Button" text="Thêm câu hỏi" />
    </children>
 </VBox>

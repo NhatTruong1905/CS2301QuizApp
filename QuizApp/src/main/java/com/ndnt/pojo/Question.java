@@ -39,7 +39,35 @@ public class Question {
         private String image;
         private Category category;
         private Level level;
-        private List<Choice> choices;
+        private List<Choice> choices = new ArrayList<>();
+
+        public Builder(String content, Category c, Level l) throws Exception {
+            if (content.isEmpty() || c == null || l == null) {
+                throw new Exception("Invalid data: ");
+            }
+            this.content = content;
+            this.category = c;
+            this.level = l;
+        }
+
+        public Builder addHint(String hint) {
+            this.hint = hint;
+            return this;
+        }
+
+        public Builder addImage(String image) {
+            this.image = image;
+            return this;
+        }
+
+        public Builder addChoice(Choice c) {
+            this.choices.add(c);
+            return this;
+        }
+
+        public Question build() {
+            return new Question(this);
+        }
     }
 
     public int getId() {

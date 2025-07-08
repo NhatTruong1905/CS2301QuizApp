@@ -1,8 +1,6 @@
 package com.ndnt.quizapp;
 
-import com.ndnt.themes.DarkThemeFactory;
 import com.ndnt.themes.Theme;
-import com.ndnt.themes.ThemeManager;
 import com.ndnt.utils.MyAlert;
 import com.ndnt.utils.MyStage;
 import java.io.IOException;
