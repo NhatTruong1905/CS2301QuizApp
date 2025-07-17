@@ -11,19 +11,24 @@ import com.ndnt.pojo.Question;
 import com.ndnt.services.CategoryServices;
 import com.ndnt.services.LevelServices;
 import com.ndnt.services.QuestionServices;
+import com.ndnt.utils.Configs;
 import com.ndnt.utils.MyAlert;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -44,10 +49,11 @@ public class QuestionController implements Initializable {
     private TextArea txtContent;
     @FXML
     private ToggleGroup toggleChoice;
+    @FXML
+    private TableView<Question> tbQuestions;
+    @FXML
+    private TextField txtSearch;
 
-    private static final CategoryServices cateServices = new CategoryServices();
-    private static final LevelServices levelServices = new LevelServices();
-    private static final QuestionServices questionServices = new QuestionServices();
 
     /**
      * Initializes the controller class.
@@ -56,9 +62,21 @@ public class QuestionController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
 
-            this.cbCates.setItems(FXCollections.observableList(cateServices.getCates()));
-            this.cbLevels.setItems(FXCollections.observableList(levelServices.getLevels()));
+            this.cbCates.setItems(FXCollections.observableList(Configs.cateServices.getCates()));
+            this.cbLevels.setItems(FXCollections.observableList(Configs.levelServices.getLevels()));
 
+            this.loadColumns();
+            this.tbQuestions.setItems(FXCollections.observableArrayList(Configs.questionServices.getQuestions()));
+
+            this.txtSearch.textProperty().addListener(e -> {
+                this.tbQuestions.getItems().clear();
+                try {
+                    this.tbQuestions.setItems(FXCollections.observableArrayList(Configs.questionServices.getQuestions(this.txtSearch.getText())));
+                } catch (SQLException ex) {
+                    Logger.getLogger(QuestionController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
+
+            });
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -92,12 +110,24 @@ public class QuestionController implements Initializable {
                 b.addChoice(choice);
             }
 
-            questionServices.addQuestion(b.build());
+            Configs.questionServices.addQuestion(b.build());
             MyAlert.getInstance().showMsg("Thêm câu hỏi thành công!");
         } catch (SQLException ex) {
             MyAlert.getInstance().showMsg("Thêm dữ liệu không thành công, lý do: " + ex.getMessage());
         } catch (Exception ex) {
             MyAlert.getInstance().showMsg("Dữ liệu không hợp lệ!!!");
         }
+    }
+
+    private void loadColumns() {
+        TableColumn colId = new TableColumn("Id");
+        colId.setCellValueFactory(new PropertyValueFactory("id")); // Tên ("id") phải cùng với tên thuộc tính lớp Question
+        colId.setPrefWidth(100);
+
+        TableColumn colContent = new TableColumn("Nội dung câu hỏi");
+        colContent.setCellValueFactory(new PropertyValueFactory("content")); // Tên ("content") phải cùng với tên thuộc tính lớp Question
+        colContent.setPrefWidth(250);
+
+        this.tbQuestions.getColumns().addAll(colId, colContent);
     }
 }
