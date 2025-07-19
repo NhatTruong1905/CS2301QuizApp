@@ -4,7 +4,9 @@
  */
 package com.ndnt.utils;
 
+import java.util.Optional;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  *
@@ -30,5 +32,11 @@ public class MyAlert {
     public void showMsg(String msg) {
         this.alert.setContentText(msg);
         this.alert.showAndWait();
+    }
+
+    public Optional<ButtonType> showMsg(String msg, Alert.AlertType type) {
+        this.alert.setContentText(msg);
+        this.alert.setAlertType(type);
+        return this.alert.showAndWait();
     }
 }

@@ -71,7 +71,7 @@ public class PracticeController implements Initializable {
             rdo.setToggleGroup(g);
 
             vboxChoices.getChildren().add(rdo);
-        }
+        } 
     }
 
     public void handleCheck(ActionEvent action) {

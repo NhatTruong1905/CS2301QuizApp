@@ -126,4 +126,15 @@ public class QuestionServices {
             conn.rollback();
         }
     }
+
+    public boolean deleteQuestion(int id) throws SQLException {
+        // Mo ket noi
+        Connection conn = JdbcConnector.getInstance().connect();
+
+        // Truy van
+        PreparedStatement stm = conn.prepareCall("DELETE FROM question WHERE id=?");
+        stm.setInt(1, id);
+
+        return stm.executeUpdate() > 0;
+    }
 }
