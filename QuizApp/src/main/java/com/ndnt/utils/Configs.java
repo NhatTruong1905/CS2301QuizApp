@@ -6,7 +6,9 @@ package com.ndnt.utils;
 
 import com.ndnt.services.CategoryServices;
 import com.ndnt.services.LevelServices;
-import com.ndnt.services.QuestionServices;
+import com.ndnt.services.questions.BaseQuestionServices;
+import com.ndnt.services.questions.QuestionServices;
+import com.ndnt.services.questions.UpdateQuestionServices;
 
 /**
  *
@@ -15,7 +17,8 @@ import com.ndnt.services.QuestionServices;
 public class Configs {
 
     public static final LevelServices levelServices = new LevelServices();
-    public static final QuestionServices questionServices = new QuestionServices();
+    public static final BaseQuestionServices questionServices = new QuestionServices();
+    public static final UpdateQuestionServices uQuestionServices = new UpdateQuestionServices();
     public static final CategoryServices cateServices = new CategoryServices();
-    
+
 }

@@ -8,6 +8,10 @@ import com.ndnt.pojo.Category;
 import com.ndnt.pojo.Choice;
 import com.ndnt.pojo.Level;
 import com.ndnt.pojo.Question;
+import com.ndnt.services.questions.BaseQuestionServices;
+import com.ndnt.services.questions.CategoryQuestionServicesDecorator;
+import com.ndnt.services.questions.KeywordQuestionServicesDecorator;
+import com.ndnt.services.questions.LevelQuestionServicesDecorator;
 import com.ndnt.utils.Configs;
 import com.ndnt.utils.MyAlert;
 import java.net.URL;
@@ -44,7 +48,11 @@ public class QuestionController implements Initializable {
     @FXML
     private ComboBox<Category> cbCates;
     @FXML
+    private ComboBox<Category> cbSearchCates;
+    @FXML
     private ComboBox<Level> cbLevels;
+    @FXML
+    private ComboBox<Level> cbSearchLevels;
     @FXML
     private VBox vboxChoice;
     @FXML
@@ -64,23 +72,46 @@ public class QuestionController implements Initializable {
         try {
 
             this.cbCates.setItems(FXCollections.observableList(Configs.cateServices.getCates()));
+            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateServices.getCates()));
             this.cbLevels.setItems(FXCollections.observableList(Configs.levelServices.getLevels()));
+            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.levelServices.getLevels()));
 
             this.loadColumns();
-            this.tbQuestions.setItems(FXCollections.observableArrayList(Configs.questionServices.getQuestions()));
-
-            this.txtSearch.textProperty().addListener(e -> {
-                this.tbQuestions.getItems().clear();
-                try {
-                    this.tbQuestions.setItems(FXCollections.observableArrayList(Configs.questionServices.getQuestions(this.txtSearch.getText())));
-                } catch (SQLException ex) {
-                    Logger.getLogger(QuestionController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                }
-
-            });
+            this.tbQuestions.setItems(FXCollections.observableArrayList(Configs.questionServices.list()));
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        
+        this.txtSearch.textProperty().addListener(e -> {
+            try {
+                BaseQuestionServices s = new KeywordQuestionServicesDecorator(Configs.questionServices, this.txtSearch.getText());
+                this.tbQuestions.getItems().clear();
+                this.tbQuestions.setItems(FXCollections.observableArrayList(s.list()));
+            } catch (SQLException ex) {
+                Logger.getLogger(QuestionController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
+        });
+
+        this.cbSearchCates.getSelectionModel().selectedItemProperty().addListener(e -> {
+            try {
+                BaseQuestionServices s = new CategoryQuestionServicesDecorator(Configs.questionServices, this.cbSearchCates.getSelectionModel().getSelectedItem().getId());
+                this.tbQuestions.getItems().clear();
+                this.tbQuestions.setItems(FXCollections.observableArrayList(s.list()));
+            } catch (SQLException ex) {
+                Logger.getLogger(QuestionController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
+        });
+
+        this.cbSearchLevels.getSelectionModel().selectedItemProperty().addListener(e -> {
+            try {
+                BaseQuestionServices s = new LevelQuestionServicesDecorator(Configs.questionServices, this.cbSearchLevels.getSelectionModel().getSelectedItem().getId());
+                this.tbQuestions.getItems().clear();
+                this.tbQuestions.setItems(FXCollections.observableArrayList(s.list()));
+            } catch (SQLException ex) {
+                Logger.getLogger(QuestionController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
+        });
+
     }
 
     public void addChoice(ActionEvent action) {
@@ -111,7 +142,7 @@ public class QuestionController implements Initializable {
                 b.addChoice(choice);
             }
 
-            Configs.questionServices.addQuestion(b.build());
+            Configs.uQuestionServices.addQuestion(b.build());
             MyAlert.getInstance().showMsg("Thêm câu hỏi thành công!");
         } catch (SQLException ex) {
             MyAlert.getInstance().showMsg("Thêm dữ liệu không thành công, lý do: " + ex.getMessage());
@@ -141,7 +172,7 @@ public class QuestionController implements Initializable {
                 if (t.isPresent() && t.get().equals(ButtonType.OK)) {
                     Question q = (Question) cell.getTableRow().getItem();
                     try {
-                        if (Configs.questionServices.deleteQuestion(q.getId()) == true) {
+                        if (Configs.uQuestionServices.deleteQuestion(q.getId()) == true) {
                             this.tbQuestions.getItems().remove(q);
                             MyAlert.getInstance().showMsg("Xóa câu hỏi thành công!", Alert.AlertType.INFORMATION);
                         } else {

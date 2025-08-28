@@ -4,16 +4,24 @@
  */
 package com.ndnt.quizapp;
 
+import com.ndnt.pojo.Category;
+import com.ndnt.pojo.Level;
 import com.ndnt.pojo.Question;
+import com.ndnt.services.questions.BaseQuestionServices;
+import com.ndnt.services.questions.CategoryQuestionServicesDecorator;
+import com.ndnt.services.questions.LevelQuestionServicesDecorator;
+import com.ndnt.services.questions.LimitedQuestionServicesDecorator;
 import com.ndnt.utils.Configs;
 import com.ndnt.utils.MyAlert;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -35,6 +43,10 @@ public class PracticeController implements Initializable {
     private Text txtResult;
     @FXML
     private VBox vboxChoices;
+    @FXML
+    private ComboBox<Category> cbSearchCates;
+    @FXML
+    private ComboBox<Level> cbSearchLevels;
 
     private List<Question> questions;
     private int currentQuestion;
@@ -44,14 +56,33 @@ public class PracticeController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        try {
+            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateServices.getCates()));
+            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.levelServices.getLevels()));
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void handleStart(ActionEvent action) throws SQLException {
         try {
             int num = Integer.parseInt(this.txtNum.getText());
 
-            questions = Configs.questionServices.getQuestions(num);
+            BaseQuestionServices s = Configs.questionServices;
+            
+            Category c = this.cbSearchCates.getSelectionModel().getSelectedItem();
+            if (c != null) {
+                s = new CategoryQuestionServicesDecorator(s, c.getId());
+            }
+
+            Level l = this.cbSearchLevels.getSelectionModel().getSelectedItem();
+            if (l != null) {
+                s = new LevelQuestionServicesDecorator(s, l.getId());
+            }
+
+            s = new LimitedQuestionServicesDecorator(s, num);
+            questions = s.list();
 
             this.currentQuestion = 0;
             this.loadQuestion();
@@ -71,19 +102,18 @@ public class PracticeController implements Initializable {
             rdo.setToggleGroup(g);
 
             vboxChoices.getChildren().add(rdo);
-        } 
+        }
     }
 
     public void handleCheck(ActionEvent action) {
         Question q = this.questions.get(this.currentQuestion);
         for (int i = 0; i < q.getChoices().size(); i++) {
-            if(q.getChoices().get(i).isCorrect()){
-                RadioButton r = (RadioButton)this.vboxChoices.getChildren().get(i); 
-                if(r.isSelected()){
+            if (q.getChoices().get(i).isCorrect()) {
+                RadioButton r = (RadioButton) this.vboxChoices.getChildren().get(i);
+                if (r.isSelected()) {
                     this.txtResult.setText("CHÍNH XÁC");
                     this.txtResult.setStyle("-fx-fill: blue");
-                }
-                else{
+                } else {
                     this.txtResult.setText("SAI BÉT HEHE ^^!");
                     this.txtResult.setStyle("-fx-fill: red");
                 }
