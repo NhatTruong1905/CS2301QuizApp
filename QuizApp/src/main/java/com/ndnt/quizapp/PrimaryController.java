@@ -27,11 +27,11 @@ public class PrimaryController implements Initializable {
     }
 
     public void handleQuestionManager(ActionEvent event) throws IOException {
-        MyStage.getInstance().showStage("question.fxml");
+        MyStage.getInstance().showStage("question");
     }
 
-    public void handlePratice(ActionEvent event) {
-        MyAlert.getInstance().showMsg("Coming soon...");
+    public void handlePratice(ActionEvent event) throws IOException {
+       MyStage.getInstance().showStage("practice");
     }
 
     public void handleTest(ActionEvent event) {

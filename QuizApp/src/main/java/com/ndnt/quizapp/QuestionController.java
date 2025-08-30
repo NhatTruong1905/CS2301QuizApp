@@ -13,6 +13,7 @@ import com.ndnt.services.questions.CategoryQuestionServicesDecorator;
 import com.ndnt.services.questions.KeywordQuestionServicesDecorator;
 import com.ndnt.services.questions.LevelQuestionServicesDecorator;
 import com.ndnt.utils.Configs;
+import com.ndnt.utils.FlyweightFactory;
 import com.ndnt.utils.MyAlert;
 import java.net.URL;
 import java.sql.SQLException;
@@ -71,17 +72,17 @@ public class QuestionController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
 
-            this.cbCates.setItems(FXCollections.observableList(Configs.cateServices.getCates()));
-            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateServices.getCates()));
-            this.cbLevels.setItems(FXCollections.observableList(Configs.levelServices.getLevels()));
-            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.levelServices.getLevels()));
+            this.cbCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateServices, "categories")));
+            this.cbSearchCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateServices, "categories")));
+            this.cbLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.levelServices, "levels")));
+            this.cbSearchLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.levelServices, "levels")));
 
             this.loadColumns();
             this.tbQuestions.setItems(FXCollections.observableArrayList(Configs.questionServices.list()));
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
+
         this.txtSearch.textProperty().addListener(e -> {
             try {
                 BaseQuestionServices s = new KeywordQuestionServicesDecorator(Configs.questionServices, this.txtSearch.getText());

@@ -5,11 +5,10 @@
 package com.ndnt.services;
 
 import com.ndnt.pojo.Category;
-import com.ndnt.utils.JdbcConnector;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,24 +16,20 @@ import java.util.List;
  *
  * @author admin
  */
-public class CategoryServices {
+public class CategoryServices extends BaseServices<Category> {
 
-    public List<Category> getCates() throws SQLException {
-        // Mo ket noi
-        Connection conn = JdbcConnector.getInstance().connect();
+    @Override
+    public PreparedStatement getStm(Connection conn) throws SQLException {
+        return conn.prepareCall("SELECT * FROM category");
+    }
 
-        // Truy van
-        Statement stm = conn.createStatement(); // Thuc thi truy van
-        ResultSet rs = stm.executeQuery("SELECT * FROM category");
-
+    @Override
+    public List<Category> getResult(ResultSet rs) throws SQLException {
         List<Category> cates = new ArrayList<>();
         while (rs.next()) {
-            int id = rs.getInt("id");
-            String name = rs.getString("name");
-
-            Category c = new Category(id, name);
-            cates.add(c);
+            cates.add(new Category(rs.getInt("id"), rs.getString("name")));
         }
         return cates;
     }
+
 }

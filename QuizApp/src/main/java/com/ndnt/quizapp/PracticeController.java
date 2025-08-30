@@ -12,6 +12,7 @@ import com.ndnt.services.questions.CategoryQuestionServicesDecorator;
 import com.ndnt.services.questions.LevelQuestionServicesDecorator;
 import com.ndnt.services.questions.LimitedQuestionServicesDecorator;
 import com.ndnt.utils.Configs;
+import com.ndnt.utils.FlyweightFactory;
 import com.ndnt.utils.MyAlert;
 import java.net.URL;
 import java.sql.SQLException;
@@ -57,8 +58,8 @@ public class PracticeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateServices.getCates()));
-            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.levelServices.getLevels()));
+            this.cbSearchCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateServices, "categories")));
+            this.cbSearchLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.levelServices, "levels")));
 
         } catch (SQLException ex) {
             ex.printStackTrace();

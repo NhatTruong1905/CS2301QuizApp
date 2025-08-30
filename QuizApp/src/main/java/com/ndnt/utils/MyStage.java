@@ -35,13 +35,13 @@ public class MyStage {
 
     public void showStage(String fxml) throws IOException {
         if (scene == null) {
-            scene = new Scene(new FXMLLoader(App.class.getResource(fxml)).load());
+            scene = new Scene(new FXMLLoader(App.class.getResource(fxml + ".fxml")).load());
         } else {
-            scene.setRoot(new FXMLLoader(App.class.getResource(fxml)).load());
+            scene.setRoot(new FXMLLoader(App.class.getResource(fxml + ".fxml")).load());
         }
 
         ThemeManager.applyTheme(scene);
-        
+
         this.stage.setScene(scene);
         this.stage.show();
     }
