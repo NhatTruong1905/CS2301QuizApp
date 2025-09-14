@@ -31,6 +31,11 @@ public class Question {
         this.choices = b.choices;
     }
 
+    @Override
+    public String toString() {
+        return this.content;
+    }
+
     public static class Builder {
 
         private int id;

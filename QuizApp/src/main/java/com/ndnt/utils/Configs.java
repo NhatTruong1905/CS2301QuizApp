@@ -21,4 +21,6 @@ public class Configs {
     public static final UpdateQuestionServices uQuestionServices = new UpdateQuestionServices();
     public static final CategoryServices cateServices = new CategoryServices();
 
+    public static int NUM_QUESTIONS = 10;
+    public static double[] RATES = {0.2, 0.4, 0.4};
 }

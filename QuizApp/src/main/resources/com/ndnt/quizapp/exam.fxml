@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="Main" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ndnt.quizapp.ExamController">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="BÀI THI" />
+      <HBox prefHeight="0.0" prefWidth="600.0" styleClass="Main">
+         <children>
+            <ComboBox fx:id="cbTypes" prefWidth="150.0" />
+            <TextField fx:id="txtNum" />
+            <Button mnemonicParsing="false" onAction="#handleStart" text="Bắt đầu" />
+         </children>
+      </HBox>
+      <ListView fx:id="lvQuestions" prefHeight="249.0" prefWidth="600.0" styleClass="Main" />
+      <HBox prefHeight="0.0" prefWidth="600.0" styleClass="Main">
+         <children>
+            <Button mnemonicParsing="false" onAction="#handleMark" text="Chấm điểm" />
+            <Button mnemonicParsing="false" onAction="#handleSave" text="Lưu bài thi" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
