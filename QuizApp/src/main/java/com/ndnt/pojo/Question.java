@@ -21,7 +21,7 @@ public class Question {
     private Level level;
     private List<Choice> choices = new ArrayList<>();
 
-    public Question(Builder b) {
+    private Question(Builder b) {
         this.id = b.id;
         this.content = b.content;
         this.hint = b.hint;

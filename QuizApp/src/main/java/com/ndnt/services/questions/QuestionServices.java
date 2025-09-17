@@ -4,14 +4,6 @@
  */
 package com.ndnt.services.questions;
 
-import com.ndnt.pojo.Choice;
-import com.ndnt.pojo.Question;
-import com.ndnt.utils.JdbcConnector;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
